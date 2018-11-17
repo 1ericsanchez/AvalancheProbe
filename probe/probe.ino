@@ -24,24 +24,36 @@ int buttonState = 0;
 int forceArray[128];
 int arrayCount;
 int maxRuns = 8;
+int romPos;
+int k;
 
 void setup() {
   Serial.begin(9600);
-  for (int16_t i=0; i<128; i+=1){
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(EEPROM.read(i));
-  }
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
+  // init done
+  display.clearDisplay();
   arrayCount = EEPROM.read(1023);
   if (arrayCount > maxRuns){
     arrayCount = 0;
   }
+  for (int j=0; j<arrayCount; j+=1){
+    display.clearDisplay();
+    for (int16_t i=0; i<128; i+=1){
+      Serial.print("Run ");
+      Serial.print(j);
+      Serial.print(" ");
+      Serial.print(i);
+      Serial.print(": ");
+      k = EEPROM.read(j*128+i);
+      Serial.println(k);
+      display.drawLine(127-i, 0, 127-i, k, WHITE);
+      display.display();
+    }
+    delay(1000);
+  }
   Serial.print("Runs: ");
   Serial.println(arrayCount);
    // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
-  // init done
-  display.clearDisplay();
   pinMode(buttonPin, INPUT); //initialize buton pin
 }
 
@@ -75,15 +87,17 @@ void force(void) {
     display.display();
     delay(5);
     forceArray[i] = shortR;
-    Serial.println(fsrReading);
+    Serial.println(shortR);
   }
   delay(1);
   //display.clearDisplay();
 }
 
 void saveforce(void) {
+  
   for (int16_t i=0; i<128; i+=1) {
-    EEPROM.write(i, forceArray[i]);
+    romPos = arrayCount*128+i;
+    EEPROM.write(romPos, forceArray[i]);
     delay(5);
     }
     arrayCount = arrayCount + 1;
