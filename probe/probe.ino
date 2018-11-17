@@ -1,6 +1,8 @@
 /*Force sensitive resistor with out displayed to serial monitor
  * and Adafruit SSD1306
  */
+
+ 
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
