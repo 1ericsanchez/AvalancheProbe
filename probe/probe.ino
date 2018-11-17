@@ -22,6 +22,8 @@ int shortR;           // the fsrReading shortened for line graph
 int buttonPin = 2;
 int buttonState = 0;
 int forceArray[128];
+int arrayCount;
+int maxRuns = 8;
 
 void setup() {
   Serial.begin(9600);
@@ -30,6 +32,12 @@ void setup() {
     Serial.print(": ");
     Serial.println(EEPROM.read(i));
   }
+  arrayCount = EEPROM.read(1023);
+  if (arrayCount > maxRuns){
+    arrayCount = 0;
+  }
+  Serial.print("Runs: ");
+  Serial.println(arrayCount);
    // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
   // init done
@@ -44,6 +52,9 @@ void loop(void) {
   standby();
   force();
   saveforce();
+  if (arrayCount > maxRuns){
+    arrayCount = 0;
+  }
 }
 
 void standby(void) {
@@ -73,6 +84,11 @@ void force(void) {
 void saveforce(void) {
   for (int16_t i=0; i<128; i+=1) {
     EEPROM.write(i, forceArray[i]);
+    delay(5);
     }
+    arrayCount = arrayCount + 1;
+    EEPROM.write(1023, arrayCount);
+    Serial.print("Run count: ");
+    Serial.println(arrayCount);
 }
 
