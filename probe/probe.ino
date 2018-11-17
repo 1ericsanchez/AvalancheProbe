@@ -38,14 +38,20 @@ void setup() {
   }
   for (int j=0; j<arrayCount; j+=1){
     display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(20,0);
+    display.setRotation(1);
+    display.println(j+1);
+    display.setRotation(0);
     for (int16_t i=0; i<128; i+=1){
-      Serial.print("Run ");
-      Serial.print(j);
-      Serial.print(" ");
-      Serial.print(i);
-      Serial.print(": ");
+//      Serial.print("Run ");
+//      Serial.print(j);
+//      Serial.print(" ");
+//      Serial.print(i);
+//      Serial.print(": ");
       k = EEPROM.read(j*128+i);
-      Serial.println(k);
+//      Serial.println(k);
       display.drawLine(127-i, 0, 127-i, k, WHITE);
       display.display();
     }
