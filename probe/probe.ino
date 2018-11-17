@@ -1,8 +1,6 @@
 /*Force sensitive resistor with out displayed to serial monitor
  * and Adafruit SSD1306
  */
-
- 
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -20,6 +18,7 @@ int fsrReading;       // the analog reading from the FSR resistor divider
 int shortR;           // the fsrReading shortened for line graph
 int buttonPin = 2;
 int buttonState = 0;
+int forceArray[128];
 
 void setup() {
   Serial.begin(9600);
@@ -37,27 +36,37 @@ void loop(void) {
   delay(1);
   standby();
   force();
+  saveforce();
 }
 
 void standby(void) {
   buttonState = digitalRead(buttonPin);
   while (buttonState == LOW) {
     delay(100);
-    Serial.println("standby");
+    //Serial.println("standby");
     //display.clearDisplay();
     buttonState = digitalRead(buttonPin);
   } 
 }
 
 void force(void) {
-  for (int16_t i=0; i<127; i+=1) {
+  for (int16_t i=0; i<128; i+=1) {
     fsrReading = analogRead(fsrAnalogPin);
     shortR = (fsrReading/5);
+    forceArray[i] = shortR;
     display.drawLine(127-i, 0, 127-i, shortR, WHITE);
     display.display();
     delay(5);
-    Serial.println(fsrReading);
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(forceArray[i]);
   }
   delay(1);
   display.clearDisplay();
 }
+
+void saveforce(void) {
+//write force array to eeprom 
+}
+}
+
