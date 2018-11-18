@@ -20,7 +20,7 @@ int buttonPin = 2;
 int buttonState = 0;
 int forceArray[128];
 int num_runs;
-int max_runs = 8;
+int max_runs = 7;
 int mem = 1024;
 // maps roughly to [0, 32] for displaying to lcd screen
 int force_scale = 5;
@@ -54,11 +54,11 @@ void loop(void) {
   delay(1);
   display.clearDisplay();
   delay(1);
-  print_run(num_runs);
   standby();
   if (num_runs < max_runs) {
     num_runs = num_runs + 1;
   }
+  print_run(num_runs);
   getforce();
   saveforce();
 }
