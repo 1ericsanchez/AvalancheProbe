@@ -76,10 +76,10 @@ void getforce(void) {
   for (int16_t i=0; i<128; i+=1) {
     fsrReading = analogRead(fsrAnalogPin);
     shortR = (fsrReading/force_scale);
+    forceArray[i] = shortR;
     display.drawLine(127-i, 0, 127-i, shortR, WHITE);
     display.display();
     delay(5);
-    forceArray[i] = shortR;
     Serial.println(shortR);
   }
 }
@@ -103,6 +103,6 @@ void print_run(int r) {
   display.setTextColor(WHITE);
   display.setCursor(20,0);
   display.setRotation(1);
-  display.println(j+1);
+  display.println(r);
   display.setRotation(0);
 }
