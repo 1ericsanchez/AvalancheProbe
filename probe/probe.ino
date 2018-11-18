@@ -16,8 +16,10 @@ Adafruit_SSD1306 display(OLED_RESET);
 int fsrAnalogPin = 6; // FSR analog 6
 int fsrReading;       // the analog reading from the FSR resistor divider
 int shortR;           // the fsrReading shortened for line graph
-int buttonPin = 2;
+int buttonPin = 2;    // record
 int buttonState = 0;
+int resetPin = 3;    // reset
+int resetState = 0;
 int forceArray[128];
 int num_runs;
 int max_runs = 7;
@@ -31,6 +33,7 @@ void setup() {
   // initialize with the I2C addr 0x3C (for the 128x32)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  
   pinMode(buttonPin, INPUT);
+  pinMode(resetPin, INPUT);
   display.clearDisplay();
 
   num_runs = EEPROM.read(mem-1);
@@ -68,6 +71,22 @@ void standby(void) {
   buttonState = digitalRead(buttonPin);
   while (buttonState == LOW) {
     delay(200);
+    resetState = digitalRead(resetPin);
+    if (resetState == HIGH) {
+      num_runs = 0;
+      display.clearDisplay();
+      display.display();
+      display.setRotation(2);
+      display.setTextSize(2);
+      display.setCursor(0,0);
+      display.println("reset");
+      display.display();
+      delay(1000);
+      display.clearDisplay();
+      display.display();
+      Serial.println("reset");
+    }
+    delay(5);
     buttonState = digitalRead(buttonPin);
   } 
 }
@@ -98,7 +117,7 @@ void saveforce(void) {
 
 void print_run(int r) {
   display.clearDisplay();
-  display.setTextSize(2);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(20,0);
   display.setRotation(1);
