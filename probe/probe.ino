@@ -40,17 +40,19 @@ void setup() {
   if (num_runs > max_runs){
     num_runs = 0;
   }
+  Serial.println(num_runs);
   for (int16_t j=0; j<num_runs; j+=1) {
     print_run(j+1);
     for (int16_t i=0; i<128; i+=1) {
       k = EEPROM.read(j*128+i);
+      Serial.print(k);
+      Serial.print(",");
       display.drawLine(127-i, 0, 127-i, k, WHITE);
       display.display();
     }
+    Serial.println();
     delay(1000);
   }
-  Serial.print("Runs: ");
-  Serial.println(num_runs);
 }
 
 void loop(void) {
@@ -67,7 +69,6 @@ void loop(void) {
 }
 
 void standby(void) {
-  Serial.println("standby");
   buttonState = digitalRead(buttonPin);
   while (buttonState == LOW) {
     delay(200);
@@ -84,7 +85,6 @@ void standby(void) {
       delay(1000);
       display.clearDisplay();
       display.display();
-      Serial.println("reset");
     }
     delay(5);
     buttonState = digitalRead(buttonPin);
@@ -99,7 +99,6 @@ void getforce(void) {
     display.drawLine(127-i, 0, 127-i, shortR, WHITE);
     display.display();
     delay(5);
-    Serial.println(shortR);
   }
 }
 
@@ -111,8 +110,6 @@ void saveforce(void) {
     delay(5);
   }
   EEPROM.write(mem-1, num_runs);
-  Serial.print("Run count: ");
-  Serial.println(num_runs);
 }
 
 void print_run(int r) {
