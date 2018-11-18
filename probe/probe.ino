@@ -35,7 +35,7 @@ void setup() {
 
   num_runs = EEPROM.read(mem-1);
   if (num_runs > max_runs){
-    num_runs = max_runs;
+    num_runs = 0;
   }
   for (int16_t j=0; j<num_runs; j+=1) {
     print_run(j+1);
@@ -56,11 +56,11 @@ void loop(void) {
   delay(1);
   print_run(num_runs);
   standby();
+  if (num_runs < max_runs) {
+    num_runs = num_runs + 1;
+  }
   getforce();
   saveforce();
-  if (num_runs > max_runs) {
-    num_runs = max_runs;
-  }
 }
 
 void standby(void) {
@@ -87,11 +87,10 @@ void getforce(void) {
 void saveforce(void) {
   int pos;
   for (int16_t i=0; i<128; i+=1) {
-    pos = num_runs*128+i;
+    pos = (num_runs-1)*128+i;
     EEPROM.write(pos, forceArray[i]);
     delay(5);
   }
-  num_runs = num_runs + 1;
   EEPROM.write(mem-1, num_runs);
   Serial.print("Run count: ");
   Serial.println(num_runs);
