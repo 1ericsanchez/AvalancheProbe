@@ -1,4 +1,4 @@
-$fn=50;
+//$fn=50;
 
 pole_width = 2.9;
 pole_thickness = 1.7;
@@ -9,9 +9,11 @@ b_i = 20;
 b_o = 25;
 post_offset = 4;
 
+union() {
 difference() {
     basket(b_i, b_o, b_w, b_h);
     post(0, pole_width*2, 8, post_offset);
+}
 }
 post(pole_width, pole_thickness, post_height, post_offset);
 
