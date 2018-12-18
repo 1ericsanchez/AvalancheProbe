@@ -26,7 +26,9 @@ module basket (r1, r2, w, h) {
 module post (r, w, h, offset) {
     translate([0,0,-offset]) difference (){
         cylinder(h = h, r1 = r+(w/2), r2 = r+(w/2));
-        cylinder(h = h, r1 = r, r2 = r);
+        translate([0,0,-offset+1]){
+        cylinder(h = h+4, r1 = r, r2 = r);
+        }
     }
 }
 
