@@ -1,4 +1,4 @@
-//$fn=50;
+$fn=50;
 
 pole_width = 2.9;
 pole_thickness = 1.7;
