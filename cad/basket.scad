@@ -1,21 +1,41 @@
-$fn=50;
+$fn=80;
 
-pole_width = 2.9;
-pole_thickness = 1.7;
+// post properties
+post_width = 2.9;
+post_thickness = 1.7;
 post_height = 12;
-b_w = 2;
-b_h = 5;
-b_i = 20;
-b_o = 25;
 post_offset = 4;
 
-union() {
-difference() {
-    basket(b_i, b_o, b_w, b_h);
-    post(0, pole_width*2, 8, post_offset);
+// basket properties
+basket_w = 1.5;
+basket_h = 5;
+basket_i = 20;
+basket_o = 25;
+
+// basket punchout properties
+punchout_n = 5;
+punchout_r = 7;
+punchout_offset = 22;
+
+//minkowski() {
+ //  sphere([0.5,0.5,1]);
+   final();
+//}
+
+module final () {
+    difference() {
+        union() {
+            union() {
+                difference() {
+                    basket(basket_i, basket_o, basket_w, basket_h);
+                    post(0, post_width*2, 8, post_offset);
+                }
+            }
+            post(post_width, post_thickness, post_height, post_offset);
+        }
+        punchouts(punchout_n, punchout_r, punchout_offset);
+    }
 }
-}
-post(pole_width, pole_thickness, post_height, post_offset);
 
 module basket (r1, r2, w, h) {
         difference () {
@@ -34,4 +54,9 @@ module post (r, w, h, offset) {
     }
 }
 
-
+module punchouts (n, r, offset) {
+    for (i = [0: n-1]) {
+    rotate ([0, 0, i * 360/n]) translate ([offset, 0, -5]) 
+        cylinder (r = r, h = 8);
+    }
+}
