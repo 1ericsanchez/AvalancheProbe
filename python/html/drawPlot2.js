@@ -76,16 +76,13 @@ function getData(){
 			// console.log(data.Layer);
 			var sd = [];
 			var h = [];
+			//populates array and adds to barChart. Doesn't handle top down profiles, +/- hardness,
+			//or tapered hardness yet
 			for (i in data.Pit_Observation.Layer){
 				l = Object.values(data.Pit_Observation.Layer[i]);
 				f = l[0];
 				sd[i] = f.startDepth
 				h[i] = hardnesses.get(f.hardness1);
-				// d = Object.values(l[0])
-				// l = JSON.stringify(data.Pit_Observation.Layer[i]);
-				// console.log(d[1]);
-				// console.log(f.startDepth);
-
 				var myBarchart = new Barchart(
 				{
 					canvas:c,
@@ -186,6 +183,7 @@ var Barchart = function(options){
 			gridValue+=this.options.gridScale;
 		}
 		//draw horizontal grid lines
+		//something's not right with odd pit height
 		var lines = Math.ceil(this.options.widths[0]/10);
 		gridValue = 0;
 		for (var i = 0; i < lines; i++){
@@ -245,7 +243,6 @@ var Barchart = function(options){
 }
 
 //page setup
-
 const buttonListener = document.getElementById('get');
 buttonListener.addEventListener('click', function(event){
 //data object returned here, not assigned or used right now
